@@ -24,7 +24,7 @@ public class IdempotentGlobalFilter implements GlobalFilter, Ordered {
 
     @Resource private StringRedisTemplate stringRedisTemplate;
 
-    public static final String REPEAT_KEY = "DAHUA:SIGN:";
+    public static final String REPEAT_KEY = "MUERN:SIGN:";
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
