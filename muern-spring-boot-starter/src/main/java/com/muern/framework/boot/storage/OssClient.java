@@ -23,9 +23,9 @@ public class OssClient implements StorageClient{
 
     /** oss的EndPoint  例如:oss-cn-hangzhou.aliyuncs.com */
     @Value("${muern.storage.oss.endpoint}") private String endpoint;
-    /** 分配的accessKey 例如：LTAI5tER5qqdc5g1hWMrmMRG */
+    /** 分配的accessKey 例如： */
     @Value("${muern.storage.oss.access-key}") private String accessKey;
-    /** 分配的accessSecret 例如：zjiz1BJ1ef64UjurdFYDTsbVF5OkiG */
+    /** 分配的accessSecret 例如： */
     @Value("${muern.storage.oss.access-secret}") private String accessSecret;
     /** 分配的bucketName */
     @Value("${muern.storage.oss.bucket-name}") private String bucketName;
