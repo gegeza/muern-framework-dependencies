@@ -1,8 +1,12 @@
 package com.muern.framework.boot.utils;
 
+import com.muern.framework.core.generate.Generate;
+
 import static com.muern.framework.core.common.Constant.UNKNOWN;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author 272215
@@ -43,5 +47,4 @@ public final class IpUtil {
         }
         return ip;
     }
-
 }

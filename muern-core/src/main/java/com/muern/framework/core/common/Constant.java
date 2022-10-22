@@ -25,6 +25,7 @@ public class Constant {
 
 
 
+    public static final String DOT = ".";
     public static final String UNKNOWN = "unknown";
     public static final String CODE = "Code";
     public static final String DATA = "Data";

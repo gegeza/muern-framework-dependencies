@@ -29,6 +29,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.cloud.version>2021.0.4</spring.cloud.version>
         <spring.cloud.alibaba.version>2021.0.4.0</spring.cloud.alibaba.version>
+        <muern.framework.version>1.0.0</muern.framework.version>
         <!--第三方jar包版本-->
         <aliyun.oss.version>3.15.1</aliyun.oss.version>
         <aws.s3.version>1.12.99</aws.s3.version>
@@ -39,6 +40,7 @@
         <nacos.client.version>2.1.0</nacos.client.version>
         <pagehelper.version>1.4.3</pagehelper.version>
         <poi.version>5.2.2</poi.version>
+        <ulid.version>5.0.0</ulid.version>
     </properties>
 
     <dependencyManagement>
@@ -120,19 +122,24 @@
                 <version>${aws.s3.version}</version>
             </dependency>
             <dependency>
+                <groupId>com.github.f4b6a3</groupId>
+                <artifactId>ulid-creator</artifactId>
+                <version>${ulid.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.muern.framework</groupId>
                 <artifactId>muern-core</artifactId>
-                <version>${project.version}</version>
+                <version>${muern.framework.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.muern.framework</groupId>
                 <artifactId>muern-spring-boot-starter</artifactId>
-                <version>${project.version}</version>
+                <version>${muern.framework.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.muern.framework</groupId>
                 <artifactId>muern-spring-cloud-starter</artifactId>
-                <version>${project.version}</version>
+                <version>${muern.framework.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

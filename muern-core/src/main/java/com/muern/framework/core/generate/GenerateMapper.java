@@ -45,7 +45,7 @@ public final class GenerateMapper {
         try (
             PrintWriter pw = new PrintWriter(new FileWriter(file))
         ) {
-            pw.println(sb.toString());
+            pw.print(sb.toString());
             pw.flush();
             pw.close();
             System.out.println("Generate Successful :" + file.getPath());

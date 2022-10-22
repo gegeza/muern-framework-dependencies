@@ -9,13 +9,18 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
 import com.muern.framework.core.common.Maps;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +32,8 @@ import java.util.Map;
 @Component
 @ConditionalOnProperty(prefix = "muern.storage.s3", name = "enable", havingValue = "true")
 public class S3Client implements StorageClient {
+
+    public static final Logger LOGGER = LoggerFactory.getLogger(S3Client.class);
 
     /** 云存储endpoint地址  例如:https://s3.muern.com:9021 */
     @Value("${muern.storage.s3.endpoint}") private String endpoint;
@@ -54,20 +61,46 @@ public class S3Client implements StorageClient {
     }
 
     @Override
-    public boolean existsObject(String key) {
-        return s3Client.doesObjectExist(bucketName, key);
+    public boolean existsObject(String fileKey) {
+        return s3Client.doesObjectExist(bucketName, fileKey);
     }
 
     @Override
-    public String getUploadUrl(String key) {
-        URL url = s3Client.generatePresignedUrl(bucketName, key, getExpiration(), HttpMethod.PUT);
-        return URLDecoder.decode(url.toString().replace(endpoint, proxyEndpoint));
+    public Map<String, Object> getMetaData(String fileKey) {
+        ObjectMetadata metadata = s3Client.getObjectMetadata(bucketName, fileKey);
+        return Maps.of("size", metadata.getContentLength());
     }
 
     @Override
-    public String getDownloadUrl(String key) {
-        URL url = s3Client.generatePresignedUrl(bucketName, key, getExpiration(), HttpMethod.GET);
-        return URLDecoder.decode(url.toString());
+    public String getUploadUrl(String directory, String fileName) {
+        //创建请求对象
+        GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucketName, getFileKey(directory, fileName), HttpMethod.PUT);
+        //设置过期时间
+        request.setExpiration(getExpiration());
+        //设置ContentType
+        request.setContentType("application/octet-stream");
+        //生成PUT上传地址
+        return s3Client.generatePresignedUrl(request).toString();
+    }
+
+    @Override
+    public String getDownloadUrl(String fileKey, String fileName) {
+        try {
+            //创建请求对象
+            GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucketName, fileKey, HttpMethod.GET);
+            //设置过期时间
+            request.setExpiration(getExpiration());
+            //设置下载文件名
+            ResponseHeaderOverrides overrides = new ResponseHeaderOverrides();
+            overrides.setContentDisposition(
+                    "attachment;filename=\"".concat(URLEncoder.encode(fileName, StandardCharsets.UTF_8.name())).concat("\""));
+            request.setResponseHeaders(overrides);
+            //生成GET下载地址
+            return s3Client.generatePresignedUrl(request).toString();
+        } catch (UnsupportedEncodingException e) {
+            LOGGER.error(e.getMessage(), e);
+            return null;
+        }
     }
 
     @Override

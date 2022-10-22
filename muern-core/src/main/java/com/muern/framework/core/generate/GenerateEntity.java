@@ -49,11 +49,8 @@ public final class GenerateEntity {
         sb.append("\tprivate static final long serialVersionUID = ").append(generateSerialVersionUid()).append("L;\r\n\r\n");
         for (int i = 0; i < colnames.size(); i++) {
             sb.append("\t/** ").append(colComment.get(i)).append(" */\r\n");
-            sb.append("\t@Entity.Column(");
             if (i == 0) {
-                sb.append("id = true)\r\n");
-            } else {
-                sb.append("\"").append(colnames.get(i)).append("\")\r\n");
+                sb.append("\t@Entity.Column(").append("id = true)\r\n");
             }
             sb.append("\tprivate ").append(getType(colTypes.get(i))).append(" ").append(underline2Camel(colnames.get(i))).append(";\r\n\r\n");
         }
@@ -83,7 +80,7 @@ public final class GenerateEntity {
         try (
             PrintWriter pw = new PrintWriter(new FileWriter(file))
         ) {
-            pw.println(sb.toString());
+            pw.print(sb.toString());
             pw.flush();
             System.out.println("Generate Successful :" + file.getPath());
         }

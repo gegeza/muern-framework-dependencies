@@ -39,10 +39,8 @@ public class GenerateService {
         sb.append("\t/**\r\n\t * 查询详细数据\r\n\t * @param dto 查询条件\r\n\t * @param id 主键\r\n\t * @return ")
                 .append(entityPackage).append(entityName).append("\r\n\t */\r\n");
         sb.append("\t").append(entityName).append(" detail(").append(entityName).append("DTO dto, Long id);\r\n\r\n");
-        sb.append("\t/**\r\n\t * 插入数据\r\n\t * @param dto 插入的信息\r\n\t */\r\n");
-        sb.append("\tvoid create(").append(entityName).append("DTO dto);\r\n\r\n");
-        sb.append("\t/**\r\n\t * 修改数据\r\n\t * @param dto 修改的信息\r\n\t */\r\n");
-        sb.append("\tvoid modify(").append(entityName).append("DTO dto);\r\n");
+        sb.append("\t/**\r\n\t * 插入或修改数据 根据主键判断\r\n\t * @param dto 插入或修改数据\r\n\t */\r\n");
+        sb.append("\tvoid com(").append(entityName).append("DTO dto);\r\n");
         sb.append("}");
         //写入文件
         String path = servicePath.concat("/src/main/java/").concat(servicePackage.replaceAll("\\.", "/")).concat("/");
@@ -59,7 +57,7 @@ public class GenerateService {
         try (
             PrintWriter pw = new PrintWriter(new FileWriter(file))
         ) {
-            pw.println(sb.toString());
+            pw.print(sb.toString());
             pw.flush();
             pw.close();
             System.out.println("Generate Successful :" + file.getPath());

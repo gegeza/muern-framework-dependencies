@@ -46,7 +46,6 @@ public class GenerateServiceImpl {
         sb.append("\t@Override\r\n\tpublic PageInfo<").append(entityName).append("> page(").append(entityName).append("DTO dto) {\r\n")
                 .append("\t\t//构建查询条件\r\n")
                 .append("\t\tExampleWrapper<").append(entityName).append(", Long> wrapper = mapper.wrapper();\r\n")
-                .append("\t\t//TODO 添加查询条件 使用方法见：https://mapper.mybatis.io/docs/1.getting-started.html#_1-4-4-wrapper-%E7%94%A8%E6%B3%95\r\n")
                 .append("\t\t//调用分页查询方法\r\n")
                 .append("\t\tPageHelper.startPage(dto.getPageNum(), dto.getPageSize());\r\n")
                 .append("\t\treturn new PageInfo<>(wrapper.list());\r\n\t}\r\n\r\n");
@@ -54,7 +53,6 @@ public class GenerateServiceImpl {
         sb.append("\t@Override\r\n\tpublic List<").append(entityName).append("> list(").append(entityName).append("DTO dto) {\r\n")
                 .append("\t\t//构建查询条件\r\n")
                 .append("\t\tExampleWrapper<").append(entityName).append(", Long> wrapper = mapper.wrapper();\r\n")
-                .append("\t\t//TODO 添加查询条件 使用方法见：https://mapper.mybatis.io/docs/1.getting-started.html#_1-4-4-wrapper-%E7%94%A8%E6%B3%95\r\n")
                 .append("\t\t//调用分页查询方法\r\n")
                 .append("\t\treturn wrapper.list();\r\n\t}\r\n\r\n");
         //detail method
@@ -64,19 +62,20 @@ public class GenerateServiceImpl {
                 .append("\t\t\tBeanUtils.copyProperties(dto, ").append(obj).append(");\r\n")
                 .append("\t\t\treturn mapper.selectOne(").append(obj).append(").orElse(null);\r\n\t\t}\r\n\t}\r\n\r\n");
         //create method
-        sb.append("\t@Override\r\n\tpublic void create(").append(entityName).append("DTO dto) {\r\n")
-                .append("\t\t//构建对象\r\n")
-                .append("\t\t").append(entityName).append(" ").append(obj).append(" = new ").append(entityName).append("();\r\n")
-                .append("\t\tBeanUtils.copyProperties(dto, ").append(obj).append(");\r\n")
-                .append("\t\t//TODO setting create field\r\n\t\t//调用新增方法\r\n")
-                .append("\t\tmapper.insertSelective(").append(obj).append(");\r\n\t}\r\n\r\n");
-        //modify method
-        sb.append("\t@Override\r\n\tpublic void modify(").append(entityName).append("DTO dto) {\r\n")
-                .append("\t\t//构建对象\r\n")
-                .append("\t\t").append(entityName).append(" ").append(obj).append(" = new ").append(entityName).append("();\r\n")
-                .append("\t\tBeanUtils.copyProperties(dto, ").append(obj).append(");\r\n")
-                .append("\t\t//TODO setting modify field\r\n\t\t//调用更新方法\r\n")
-                .append("\t\tmapper.updateByPrimaryKeySelective(").append(obj).append(");\r\n\t}\r\n");
+        sb.append("\t@Override\r\n\tpublic void com(").append(entityName).append("DTO dto) {\r\n")
+                .append("\t\tif (dto.getId() == null) {\r\n")
+                .append("\t\t\t//构建对象\r\n")
+                .append("\t\t\t").append(entityName).append(" ").append(obj).append(" = new ").append(entityName).append("();\r\n")
+                .append("\t\t\tBeanUtils.copyProperties(dto, ").append(obj).append(");\r\n")
+                .append("\t\t\t//TODO setting create field\r\n\t\t\t//调用新增方法\r\n")
+                .append("\t\t\tmapper.insertSelective(").append(obj).append(");\r\n")
+                .append("\t\t} else {\r\n")
+                .append("\t\t\t//构建对象\r\n")
+                .append("\t\t\t").append(entityName).append(" ").append(obj).append(" = new ").append(entityName).append("();\r\n")
+                .append("\t\t\tBeanUtils.copyProperties(dto, ").append(obj).append(");\r\n")
+                .append("\t\t\t//TODO setting modify field\r\n\t\t\t//调用更新方法\r\n")
+                .append("\t\t\tmapper.updateByPrimaryKeySelective(").append(obj).append(");\r\n")
+                .append("\t\t}\r\n\t}\r\n");
         sb.append("}");
         //write to file
         String path = servicePath.concat("/src/main/java/").concat(servicePackage.replaceAll("\\.", "/")).concat("/impl/");
@@ -93,7 +92,7 @@ public class GenerateServiceImpl {
         try (
             PrintWriter pw = new PrintWriter(new FileWriter(file))
         ) {
-            pw.println(sb.toString());
+            pw.print(sb.toString());
             pw.flush();
             pw.close();
             System.out.println("Generate Successful :" + file.getPath());
