@@ -21,6 +21,10 @@ public enum CodeImpl implements Code {
     ERR_REPEATED("000006", "请勿重复调用接口"),
     /** 重复调用 */
     ERR_PERMISSION("000007", "权限校验失败"),
+    /** 验证码错误 */
+    ERR_CODE("000008", "验证码错误，请稍后再试"),
+    /** 验证码错误 */
+    ERR_PASSWD("000008", "用户名或密码错误，请稍后再试"),
     ;
 
     private final String code;

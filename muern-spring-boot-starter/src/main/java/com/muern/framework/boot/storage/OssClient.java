@@ -8,9 +8,7 @@ import com.aliyun.oss.common.comm.Protocol;
 import com.aliyun.oss.model.GeneratePresignedUrlRequest;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.ResponseHeaderOverrides;
-import com.github.f4b6a3.ulid.UlidCreator;
 import com.muern.framework.boot.exception.BizException;
-import com.muern.framework.core.common.Constant;
 import com.muern.framework.core.common.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +40,6 @@ public class OssClient implements StorageClient{
     @Value("${muern.storage.oss.access-secret}") private String accessSecret;
     /** 分配的bucketName */
     @Value("${muern.storage.oss.bucket-name}") private String bucketName;
-
     private OSS oss;
 
     @PostConstruct
